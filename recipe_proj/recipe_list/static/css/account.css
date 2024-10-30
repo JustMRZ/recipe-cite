@@ -1,0 +1,99 @@
+.account{
+	margin-top: 100px;
+}
+.account__form{
+	background: rgb(114, 223, 161);
+	box-shadow: 0 2px 20px rgb(25, 148, 78);
+	padding: 20px;
+	width: 90%;
+	margin: auto;
+	border-radius: 20px;
+	color: rgb(26, 61, 41);
+}
+.account__title{
+	text-align: center;
+	margin-bottom: 10px;
+}
+.account__text{
+	text-align: center;
+	margin-bottom: 5px;
+}
+.account__field-wrapper{
+	margin: 10px 0;
+}
+.account__field-wrapper input{
+	border: none;
+	display: block;
+	width: 100%;
+	outline: none;
+	font-size: 15px;
+	text-align: center;
+	padding: 5px 10px;
+	border-radius: 10px;
+	transition: 0.5s;
+}
+.account__field-wrapper input:focus {
+	transform: scale(1.03);
+	box-shadow: 0 2px 5px rgb(25, 148, 78);
+}
+.account__button{
+	display: block;
+	width: auto;
+	padding: 5px 20px;
+	font-size: 15px;
+	color: rgb(26, 61, 41);
+	background: white;
+	border: none;
+	border-radius: 10px;
+	margin: auto;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+.account__link{
+	display: block;
+	text-align: center;
+	color: #001e0f;
+	width: fit-content;
+	margin: 10px auto;
+}
+
+.account__error-list{
+	margin: 20px;
+}
+.account__subtitile{
+	font-size: 18px;
+	text-align: center;
+}
+.account__home-button{
+	width: fit-content;
+	display: block;
+	padding: 10px;
+	border-radius: 10px;
+	background: white;
+	margin: 20px auto;
+	color: rgb(26, 61, 41);
+	text-decoration: none;
+	box-shadow: 1px 1px 2px gray;
+	transition: 0.5s;
+}
+
+@media (min-width: 800px){
+	.account{
+		margin-top: 150px;
+	}
+	.account__field-wrapper input{
+		width: 500px;
+		margin:auto;
+	}
+	.account__form{
+		width: 800px;
+	}
+	.account__error-list{
+		width: 500px;
+		margin: auto;
+	}
+	.account__home-button:hover{
+		transform: scale(1.01);
+		box-shadow: 5px 5px 10px gray;
+	}
+}

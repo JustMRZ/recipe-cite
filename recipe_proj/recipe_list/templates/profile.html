@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Котенок поворенок - профиль пользователя{% endblock %}
+{% block link %}
+	<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+	<section class="selecter">
+		<h2 class="selecter__title">Выбор действия:</h2>
+		<div class="selecter__buttons">
+			<a href="{% url 'add' %}" class="selecter__button">Добавить новый рецепт</a>
+			<a href="{% url 'recipe_user' user.id %}" class="selecter__button">Список добавленных рецептов</a>
+			<a href="{% url 'my_recipe' %}" class="selecter__button">Список сохраненных рецептов</a>
+		</div>
+	</section>
+	<section class="edit-profile">
+		<h2 class="edit-profile__title">Редактирование профиля</h2>
+		<details class="edit-profile__detail">
+			<summary>Нажмите, для редактирования</summary>
+			{% csrf_token %}
+			<form class="edit-profile__wrapper">
+				<div class="edit-profile__field">
+					<input type="text" class="edit-profile__input" maxlength="100" id="username-input" placeholder=" ">
+					<label for="username-input">Логин пользователя</label>
+				</div>
+				
+				<button class="edit-profile__button" onclick="updateProfile('username', 'username-input')">Сохранить</button>
+			</form>
+			<form class="edit-profile__wrapper">
+				<div class="edit-profile__field">
+					<input type="email" class="edit-profile__input" maxlength="100" id="email-input" placeholder=" ">
+					<label for="email-input">Электронная почта</label>
+				</div>
+				<button class="edit-profile__button" onclick="updateProfile('email', 'email-input')">Сохранить</button>
+			</form>
+			<form class="edit-profile__wrapper">
+				<div class="edit-profile__field">
+					<input type="text" class="edit-profile__input" maxlength="100" id="fname-input" placeholder=" ">
+					<label for="fname-input">Имя пользователя</label>
+				</div>
+				<button class="edit-profile__button" onclick="updateProfile('first_name', 'fname-input')">Сохранить</button>
+			</form>
+			<form class="edit-profile__wrapper">
+				<div class="edit-profile__field">
+					<input type="text" class="edit-profile__input" maxlength="100" id="lname-input" placeholder=" ">
+					<label for="lname-input">Фамилия пользователя</label>
+				</div>
+				<button class="edit-profile__button" onclick="updateProfile('last_name', 'lname-input')">Сохранить</button>
+			</form>
+			<a href="{% url 'password_change' %}" class="edit-profile__edit-password">Изменить пароль</a>
+		</details>
+	</section>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+	<script type="text/javascript">
+		function updateProfile(field, id_value) {
+			let input = document.querySelector('#' + id_value)
+			if (input.value == '' || input.validity.valid == false){
+				alert('Данные неверны')
+				return
+			}
+			$.ajax({
+		        url: '{% url "profile" %}',
+		        method: 'POST',
+		        data: {
+		        	'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val(), //получение CSRF токена
+		            'field': field,
+		            'data': document.querySelector('#' + id_value).value
+		        },
+		        success: function(response) {
+		        	document.querySelector('#' + id_value).value = ''
+		        	if (response == 'True'){
+		        		alert('Данные успешно изменены')
+		        	}
+		        	else {
+		        		alert('Данные, которые вы передали, заняты или с ошибкой. Попробуйте снова')
+		        	}
+		        	
+		        }
+		    })
+		}
+	</script>
+{% endblock %}

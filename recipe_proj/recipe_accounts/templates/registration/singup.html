@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{%load static%}
+{% block title %}Котенок поворенок - регистрация{% endblock %}
+{% block link %}
+	<link rel="stylesheet" href="{% static 'css/account.css' %}">
+{% endblock %}
+{% block content %}
+
+	<section class="account">
+		<form method="POST" class="account__form">
+			<h1 class="account__title">Регистрация</h1>
+			{% csrf_token %}
+			<div class="account__field-wrapper">
+				<p class="account__text">Введите логин пользователя:</p>
+				{{form.username}}
+			</div>
+			
+			<div class="account__field-wrapper">
+				<p class="account__text">Введите почту пользователя:</p>
+				{{form.email}}
+			</div>
+
+			<div class="account__field-wrapper">
+				<p class="account__text">Введите пароль пользователя:</p>
+				{{form.password1}}
+			</div>
+			<div class="account__field-wrapper">
+				<p class="account__text">Продублируйте пароль:</p>
+				{{form.password2}}
+			</div>
+
+			<div class="account__field-wrapper">
+				<p class="account__text">Ваше имя:</p>
+				{{form.first_name}}
+			</div>
+			<div class="account__field-wrapper">
+				<p class="account__text">Ваша фамилия:</p>
+				{{form.last_name}}
+			</div>
+
+			{% if form.errors %}
+				<ul class="account__error-list">
+					{% for field, errors in form.errors.items %}
+						{% for error in errors %}
+							<li class="account_error-list-item">{{error}}</li>
+						{% endfor %}
+					{% endfor %}
+				</ul>
+			{% endif %}
+			<input type="submit" value="Регистрация" class="account__button">
+			<a href="{% url 'login' %}" class="account__link">Уже есть аккаунт?</a>
+		</form>
+	</section>
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% load static %}
+
+{% for item in data %}
+	<div class="comments__item">
+		<h3 class="comments__author">{{ item.comment.owner }}</h3>
+		<p class="comments__data">{{ item.comment.data_create }}</p>
+		<p class="comments__value">{{ item.comment.comment }}</p>
+		<button class="comments__likes" onclick="newLike('{{ item.comment.id }}')">
+			<img src="{% static 'img/like.png' %}" alt="" class="comments__like-img">
+			<p class="comments__likes_count">{{ item.likes }}</p>
+		</button>
+		{% if item.comment.owner == user %}
+			<button class="comments__delete-comment" onclick="delComment('{{ item.comment.id }} ')">
+				<img src="{% static 'img/trash.png' %}" alt="">
+			</button>
+		{% endif %}
+	</div>
+{% endfor %}

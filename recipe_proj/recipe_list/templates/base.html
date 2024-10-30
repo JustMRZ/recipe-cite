@@ -1,0 +1,44 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{% block title %}{% endblock %}</title>
+	<link rel="stylesheet" href="{% static 'css/setup.css' %}">
+	<link rel="stylesheet" href="{% static 'css/menu.css' %}">
+	{% block link %}{% endblock %}
+</head>
+<body>
+	<nav class="navigation">
+		<input type="checkbox" class="navigation__togler">
+
+		<div class="navigation__container">
+			<a href="{% url 'home' %}" class="navigation__logo-link"><img src="{% static 'img/logo.png' %}" alt=""><span>Котенок Поворенок</span></a>
+			<div class="navigation__burger">
+				<div class="navigation__middle-line"></div>
+			</div>
+		</div>
+		
+		<ul class="navigation__links">
+			{% if user.is_authenticated %}
+				<li class="navigation__item"><a href="{% url 'profile' %}">Аккаунт</a></li>
+				<li class="navigation__item">
+					<form action="{% url 'logout' %}" method="post">
+					{% csrf_token %}
+					<button type="submit">Выйти</button>
+					</form>
+				</li>
+			{% else %}
+				<li class="navigation__item"><a href="{% url 'home' %}">Рецепты</a></li>
+				<li class="navigation__item"><a href="{% url 'signup' %}">Регистрация</a></li>
+				<li class="navigation__item"><a href="{% url 'login' %}">Войти</a></li>
+			{% endif %}
+		</ul>
+	</nav>
+	<main>
+		{% block content %}{% endblock %}
+	</main>
+
+</body>
+</html>

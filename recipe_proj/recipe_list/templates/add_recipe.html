@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Котенок поворенок - добавление рецепта{% endblock %}
+{% block link %}
+	<link rel="stylesheet" href="{% static 'css/add.css' %}">
+{% endblock %}
+
+
+{% block content %}
+{{ form.media }}
+	<section class="adder">
+		<h2 class="adder__title">Добавление нового рецепта:</h2>
+		<form method="POST" class="adder__form" enctype="multipart/form-data">
+			{% csrf_token %}
+			<div class="adder__fields">
+				<div class="adder__wrapper">
+					{{ form.title }}
+					<label for="id_title" class="adder_placeholder">Название рецепта</label>
+				</div>
+				<div class="adder__wrapper">
+					<p>Текст рецепта:</p>
+					{{ form.text_recipe }}
+				</div>
+				<div class="adder__wrapper">
+					<p>Изображение рецепта:</p>
+					{{ form.image }}
+				</div>
+				<div class="adder__wrapper">
+					{{ form.complexity }}
+					<label for="id_complexity" class="adder_placeholder">Сложность рецепта</label>
+				</div>
+				<div class="adder__wrapper">
+					<p>Категория рецепта:</p>
+					{{ form.category }}
+				</div>
+			</div>
+			<input type="submit" value="Сохранить" class="adder__submit">
+		</form>
+	</section>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+	<script type="text/javascript">
+		document.querySelector('#id_complexity').addEventListener('input', function(event) {
+		    let value = document.querySelector('#id_complexity').value
+		    if (value == '') {}
+		    else if (Number(value) > 10) { document.querySelector('#id_complexity').value = 10 }
+		    else if (Number(value) < 1) { document.querySelector('#id_complexity').value = 1 }
+		});
+	</script>
+{% endblock %}

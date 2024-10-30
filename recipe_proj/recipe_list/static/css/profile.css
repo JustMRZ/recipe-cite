@@ -1,0 +1,107 @@
+.selecter, .edit-profile{
+	margin: 100px auto;
+	width: 90%;
+	max-width: 700px;
+	background: rgb(114, 223, 161, 0.6);
+	padding: 10px;
+	border-radius: 10px;
+}
+.selecter__buttons{
+	display: flex;
+	flex-direction: column;
+}
+.selecter__title{
+	text-align: center;
+}
+.selecter__button{
+	width: 100%;
+	text-align: center;
+	background: white;
+	padding: 10px;
+	border-radius: 10px;
+	margin: 5px 0;
+	color: black;
+	text-decoration: none;
+}
+
+.edit-profile__detail{
+	margin: 20px 0;
+}
+
+.edit-profile__wrapper{
+	margin: 10px 0;
+}
+
+.edit-profile__field{
+	position: relative;
+}
+.edit-profile__field label{
+	position: absolute;
+	top: 50%;
+	left: 10px;
+	transform: translateY(-50%);
+	color: gray;
+	transition: 0.5s;
+}
+.edit-profile__field input{
+	padding: 10px;
+	border-radius: 10px;
+	border: none;
+	width: 100%;
+	outline: none;
+	
+
+}
+.edit-profile__field input:focus + label{
+	top: 0;
+	left: 0;
+	transform: translateY(-50%);
+	font-size: 15px;
+	color: black;
+	padding: 2px;
+	border-radius: 5px;
+	text-shadow: 0 0 15px black;
+}
+.edit-profile__button{
+	width: 100%;
+	margin-top: 10px;
+	border-radius: 10px;
+	padding: 10px;
+	border: none;
+}
+
+.edit-profile__field input:not(:placeholder-shown) + label{
+	top: 0;
+	left: 0;
+	transform: translateY(-50%);
+	font-size: 15px;
+	color: black;
+	padding: 2px;
+	border-radius: 5px;
+	text-shadow: 0 0 15px black;
+}
+.edit-profile__edit-password{
+	text-align: center;
+	text-decoration: none;
+	display: block;
+}
+@media (min-width: 800px){
+	.selecter{
+		margin: 120px auto;
+	}
+	.selecter__buttons{
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: space-around;
+	}
+	.selecter__button{
+		width: 45%;
+		flex-grow: 1;
+		margin: 10px 15px;
+		transition: 0.5s;
+	}
+	.selecter__button:hover{
+		transform: scale(1.02);
+		box-shadow: 5px 5px 5px grey;
+	}
+}

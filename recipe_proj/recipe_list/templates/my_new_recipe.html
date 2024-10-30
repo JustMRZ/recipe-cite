@@ -1,0 +1,14 @@
+{% load static %}
+
+{% for item in data %}
+	<a class="content__item-card" href="{{ item.recipe.get_absolute_url }}">
+		<img class="content__recipe-img" src="{{item.recipe.image.url}}" alt="">
+		<h3>{{ item.recipe.title }}</h3>
+		<p class="content__recipe-category">{{ item.recipe.category }}</p>
+		<p class="content__recipe-author">{{ item.recipe.owner }}</p>
+		<div class="content__complexity">
+			<img src="{% static 'img/complexity.png' %}" alt="" class="content__complexity-img">
+			<p class="content__complexity-data">{{ item.recipe.complexity }}</p>
+		</div>
+	</a>
+{% endfor %}

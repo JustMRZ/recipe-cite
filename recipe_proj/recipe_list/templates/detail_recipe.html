@@ -1,0 +1,266 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ recipe.title }} - котенок-поворенок{% endblock %}
+{% block link %}
+	<link rel="stylesheet" href="{% static 'css/detail.css' %}">
+{% endblock %}
+
+{% block content %}
+	<section class="detail">
+		<div class="detail__content">
+			<img src="{{ recipe.image_url }}" alt="{{ recipe.title }}" class="detail__img">
+			<div class="detail__info">
+				<h1 class="detail__title">{{ recipe.title }}</h1>
+				<div class="detail__info-block">
+					<p class="detail__info-wrapper"><img src="{% static 'img/category.png' %}" alt=""><span>{{ recipe.category }}</span></p>
+					<p class="detail__info-wrapper"><img src="{% static 'img/complexity.png' %}" alt=""><span>{{ recipe.complexity }}</span></p>
+					<a href="{% url 'recipe_user' recipe.owner.id %}" class="detail__info-wrapper detail_link"><img src="{% static 'img/user.png' %}" alt=""><span>{{ recipe.owner }}</span></a>
+				</div>
+			</div>	
+			
+			{% if before_save %}
+			<div class="detail__text">{{ new_recipe_text|safe }}</div> 
+			<button class="detail__save-recipe detail__button-swap" onclick="swapValue()">Посмотреть оригинал</button>
+			<button class="detail__save-recipe" onclick="deleteSavedRecipe()">Удалить из сохраненного</button>
+			{% else %}
+			<div class="detail__text">{{ recipe.text_recipe|safe }}</div> <!--Защиту пофиксили-->
+			<button class="detail__save-recipe" onclick="document.querySelector('#save_modal').style.display = 'block'">Сохранить рецепт</button>
+			{% endif %}
+		</div>
+	</section>
+	{% if recipe.owner == user %}
+	<section class="edit">
+		<button class="edit__button" onclick="document.querySelector('#delete_modal').style.display = 'block'">Удалить рецепт</button>
+		<button class="edit__button" onclick="document.querySelector('#edit_modal').style.display = 'block'">Изменить рецепт</button>
+	</section>
+	{% endif %}
+	<section class="comments">
+		<h2 class="comments__title">Комментарии</h2>
+		<div class="comments__send-area">
+			<textarea type="text" id="comment" class="comments__input"></textarea>
+			<button class="comments__button" onclick="newComment()">Отправить</button>
+		</div>
+		<div class="comments__container">
+			
+		</div>
+		<button class="comments__get-comment-button" onclick="getMoreComments()">Загрузить еще</button>
+	</section>
+	<a href="{% url 'home' %}" class="back-button">Домой</a>
+
+	{% if recipe.owner == user %}
+	{{ form.media }}
+	<section class="modal" id="edit_modal">
+		<div class="modal__clear-top" onclick="document.querySelector('#edit_modal').style.display = 'none'"></div>
+		<div class="modal__middle-area">
+			<div class="modal__clear-left" onclick="document.querySelector('#edit_modal').style.display = 'none'"></div>
+			<div class="modal__data">
+				<button class="modal__close" onclick="document.querySelector('#edit_modal').style.display = 'none'"><img src="{% static 'img/trash.png' %}" alt=""></button>
+				<form method="POST" enctype="multipart/form-data">
+					{% csrf_token %}
+					<div class="modal__top-flex">
+						<h2 class="modal__title">Измненение рецепта</h2>
+						
+						<div class="model__fields">
+							<div class="modal__wrapper">
+								<p>Название рецепта:</p>
+								{{ form.title }}
+							</div>
+							<div class="modal__wrapper">
+								<p>Текст рецепта:</p>
+								{{ form.text_recipe }}
+							</div>
+							<div class="modal__wrapper">
+								<p>Изображение рецепта:</p>
+								{{ form.image }}
+							</div>
+							<div class="modal__wrapper">
+								<p>Сложность рецепта:</p>
+								{{ form.complexity }}
+							</div>
+							<div class="modal__wrapper">
+								<p>Категория рецепта:</p>
+								{{ form.category }}
+							</div>
+							<input type="text" name='type' value="update_recipe" style="display: none;">
+						</div>
+					</div>
+					<input type="submit" value="Сохранить" class="modal__set-button">
+				</form>
+			</div>
+			<div class="modal__clear-right" onclick="document.querySelector('#edit_modal').style.display = 'none'"></div>
+		</div>
+		<div class="modal__clear-bottom" onclick="document.querySelector('#edit_modal').style.display = 'none'"></div>
+	</section>
+	<section class="modal" id="delete_modal">
+		<div class="modal__clear-top" onclick="document.querySelector('#delete_modal').style.display = 'none'"></div>
+		<div class="modal__middle-area">
+			<div class="modal__clear-left" onclick="document.querySelector('#delete_modal').style.display = 'none'"></div>
+			<div class="modal__data">
+				<button class="modal__close" onclick="document.querySelector('#delete_modal').style.display = 'none'"><img src="{% static 'img/trash.png' %}" alt=""></button>
+				<h2 class="modal__delete-title">Хотите удалить?</h2>
+				<button class="modal__delete-button" onclick="deleteRecipe()">Да</button>
+				<button class="modal__delete-button" onclick="document.querySelector('#delete_modal').style.display = 'none'">Нет</button>
+
+			</div>
+			<div class="modal__clear-right" onclick="document.querySelector('#delete_modal').style.display = 'none'"></div>
+		</div>
+		<div class="modal__clear-bottom" onclick="document.querySelector('#delete_modal').style.display = 'none'"></div>
+	</section>
+	{% endif %}
+	<section class="modal" id="save_modal">
+		<div class="modal__clear-top" onclick="document.querySelector('#save_modal').style.display = 'none'"></div>
+		<div class="modal__middle-area">
+			<div class="modal__clear-left" onclick="document.querySelector('#save_modal').style.display = 'none'"></div>
+			<div class="modal__data">
+				<button class="modal__close" onclick="document.querySelector('#save_modal').style.display = 'none'"><img src="{% static 'img/trash.png' %}" alt=""></button>
+				<h2 class="modal__delete-title">Редактирование сохраненного рецепта</h2>
+				<form method="POST">
+					{% csrf_token %}
+					{{ save_form.media }}
+					{{ save_form.new_text }}
+					<input type="text" name='type' value="save_recipe" style="display: none;">
+					<input class="modal__set-button" type="submit" value="Сохранить">			
+				</form>
+
+				
+			</div>
+			<div class="modal__clear-right" onclick="document.querySelector('#save_modal').style.display = 'none'"></div>
+		</div>
+		<div class="modal__clear-bottom" onclick="document.querySelector('#save_modal').style.display = 'none'"></div>
+	</section>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+	<script type="text/javascript">
+		let count_comments = 5
+		let custom_data = false 
+
+		function updateData() {
+			$.ajax({
+		        url: '{% url "update_comment" %}',
+		        method: 'GET',
+		        data: {
+		        	'type': 'update_comment', 
+		        	'count_comments': count_comments,
+		        	'recipe_id': {{ recipe.id }}
+
+		        },
+		        success: function(response) {
+		            document.querySelector('.comments__container').innerHTML = response
+		        }
+		    })
+		}
+
+		function newLike(id_comment) {
+			$.ajax({
+		        url: '{% url "new_like" %}',
+		        method: 'POST',
+		        data: {
+		        	'id_comment': id_comment,
+		        },
+		        success: function(response) {
+		            updateData()
+		        }
+		    })
+		}
+
+		function delComment(id_comment) {
+			$.ajax({
+		        url: '{% url "delete_comment" %}',
+		        method: 'POST',
+		        data: {
+		        	'id_comment': id_comment
+		        },
+		        success: function(response) {
+		            updateData()
+		        }
+		    })
+		}
+
+		function newComment() {
+			text = document.querySelector('#comment').value
+			document.querySelector('#comment').value = ''
+			$.ajax({
+		        url: '{% url "add_comment" %}',
+		        method: 'POST',
+		        data: {
+		        	'text': text,
+		        	'recipe_id': {{ recipe.id }}
+		        },
+		        success: function(response) {
+		            updateData()
+		        }
+		    })
+		}
+
+		function getMoreComments(){
+			count_comments += 5
+			updateData()
+		}
+
+		{% if recipe.owner == user %}
+			document.querySelector('#id_complexity').addEventListener('input', function(event) {
+			    let value = document.querySelector('#id_complexity').value
+			    if (value == '') {}
+			    else if (Number(value) > 10) { document.querySelector('#id_complexity').value = 10 }
+			    else if (Number(value) < 1) { document.querySelector('#id_complexity').value = 1 }
+			});
+			function deleteRecipe(){
+				$.ajax({
+			        url: '{% url "detail" recipe.id %}',
+			        method: 'POST',
+			        data: {
+			        	'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val(),
+			        	'type': 'delete_recipe'
+			        },
+			        success: function(response) {
+			            location.href = '{% url "home" %}'
+			        }
+			    })
+			}
+
+		{% endif %}
+		function swapValue() {
+			if (custom_data){
+				document.querySelector('.detail__text').innerHTML = `{{ recipe.text_recipe|safe }}`
+				let ttest = 
+				document.querySelector('.detail__button-swap').innerHTML = 'Показать сохраненный вариант'
+				custom_data = false
+			}
+			else{
+				document.querySelector('.detail__text').innerHTML = `{{ new_recipe_text|safe }}`
+				document.querySelector('.detail__button-swap').innerHTML = 'Посмотреть оригинал'
+				custom_data = true
+			}
+		}
+		function deleteSavedRecipe(){
+			$.ajax({
+			        url: '{% url "detail" recipe.id %}',
+			        method: 'POST',
+			        data: {
+			        	'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val(),
+			        	'type': 'delete_saved_recipe'
+			        },
+			        success: function(response) {
+			            location.href = '{% url "detail" recipe.id %}'
+			        }
+			    })
+		}
+		$(document).ready(function() {
+		    updateData()
+		    {% if recipe.owner == user %}
+			    document.querySelector('#id_title').value = '{{ recipe.title }}'
+			    document.querySelector('#id_text_recipe').value = `{{ recipe.text_recipe|safe }}`
+			    document.querySelector('#id_complexity').value = '{{ recipe.complexity }}'
+			    document.querySelector('#id_category').value = '{{ recipe.category }}'
+			{% endif %}
+			document.querySelector('#id_new_text').value = `{{ recipe.text_recipe|safe }}`
+			{% if before_save %}
+				custom_data = true
+			{% else %}
+				custom_data = false
+			{% endif %}
+		 	setInterval(updateData, 10000)
+		});
+		$.ajaxSetup({ data: {csrfmiddlewaretoken: '{{ csrf_token }}' },});
+
+	</script>
+{% endblock %}

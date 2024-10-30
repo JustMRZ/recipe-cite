@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{%load static%}
+{% block title %}Котенок поворенок - вход в аккаунт{% endblock %}
+{% block link %}
+	<link rel="stylesheet" href="{% static 'css/account.css' %}">
+{% endblock %}
+{% block content %}
+
+	<section class="account">
+		<form method="POST" class="account__form">
+			<h1 class="account__title">Вход в аккаунт</h1>
+			{% csrf_token %}
+			<div class="account__field-wrapper">
+				<p class="account__text">Введите логин пользователя:</p>
+				{{form.username}}
+			</div>
+			
+			<div class="account__field-wrapper">
+				<p class="account__text">Введите пароль пользователя:</p>
+				{{form.password}}
+			</div>
+			{% if form.errors %}
+				<ul class="account__error-list">
+					{% for field, errors in form.errors.items %}
+						{% for error in errors %}
+							<li class="account_error-list-item">{{error}}</li>
+						{% endfor %}
+					{% endfor %}
+				</ul>
+			{% endif %}
+			<input type="submit" value="Войти в аккаунт" class="account__button">
+			<a href="{% url 'password_reset' %}" class="account__link">Забыли пароль?</a>
+			<a href="{% url 'signup' %}" class="account__link">Нет аккаунта?</a>
+		</form>
+	</section>
+
+{% endblock %}

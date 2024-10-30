@@ -1,0 +1,66 @@
+.adder{
+	width: 90%;
+	max-width: 1440px;
+	margin: 100px auto;
+	background: rgb(114, 223, 161, 0.6);
+	padding: 10px;
+	border-radius: 10px;
+}
+.adder__wrapper{
+	margin: 10px 0;
+	position: relative;
+}
+.adder_placeholder{
+	position: absolute;
+	color: gray;
+	top: 50%;
+	left: 10px;
+	transform: translateY(-50%);
+	transition: 0.5s;
+}
+.adder__wrapper input, .adder__wrapper select{
+	width: 100%;
+	padding: 10px;
+	border-radius: 10px;
+	border: none;
+	outline: none;
+}
+.adder__wrapper input:focus + .adder_placeholder{
+	top: 0;
+	left: 0;
+	transform: translateY(-50%);
+	font-size: 15px;
+	color: black;
+	padding: 2px;
+	border-radius: 5px;
+	text-shadow: 0 0 15px black;
+}
+.adder__wrapper input:not(:placeholder-shown) + .adder_placeholder{
+	top: 0;
+	left: 0;
+	transform: translateY(-50%);
+	font-size: 15px;
+	color: black;
+	padding: 2px;
+	border-radius: 5px;
+	text-shadow: 0 0 15px black;
+}
+.adder__wrapper p{
+	font-size: 17px;
+	margin: 5px 0;
+}
+.adder__submit{
+	width: 90%;
+	display: block;
+	margin: 30px auto;
+	padding: 10px;
+	border: none;
+	border-radius: 10px;
+	font-weight: bold;
+}
+@media (min-width: 800px){
+	.adder{
+		margin: 120px auto;
+	}
+	
+}

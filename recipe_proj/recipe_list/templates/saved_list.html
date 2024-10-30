@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Котенок поворенок - рецепты от {{ recipe_user_name }}{% endblock %}
+{% block link %}
+	<link rel="stylesheet" href="{% static 'css/content.css' %}">
+
+{% endblock %}
+
+
+{% block content %}
+	<section class="content">
+		<h1 class="content__title">Сохраненные блюда:</h1>
+		<div class="content__main-container">
+			{% for item in data %}
+				<a class="content__item-card" href="{{ item.recipe.get_absolute_url }}">
+					<img class="content__recipe-img" src="{{item.recipe.image_url}}" alt="">
+					<h3>{{ item.recipe.title }}</h3>
+					<p class="content__recipe-category">{{ item.recipe.category }}</p>
+					<p class="content__recipe-author">{{ item.recipe.owner }}</p>
+					<div class="content__complexity">
+						<img src="{% static 'img/complexity.png' %}" alt="" class="content__complexity-img">
+						<p class="content__complexity-data">{{ item.recipe.complexity }}</p>
+					</div>
+				</a>
+			{% endfor %}
+		</div>
+	</section>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+	<script type="text/javascript">
+		let down = false
+		let last_count = 0
+		let stop_page = false
+
+		function countRecipes() {
+			let all_recipes = document.querySelectorAll(".content__item-card")
+			return all_recipes.length
+		}
+		function updateData() {
+			$.ajax({
+		        url: '{% url "my_recipe" %}',
+		        method: 'POST',
+		        data: {
+		        	'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val(), //получение CSRF токена
+		            'recipes_need': countRecipes() + 6
+		        },
+		        success: function(response) {
+		        	down = false
+		            document.querySelector('.content__main-container').innerHTML =response
+		        }
+		    })
+		}
+
+		window.addEventListener('scroll', () => {
+			if (stop_page) { return }
+			if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight && down == false) {
+		        down = true
+		        let count = countRecipes()
+		        if (count == last_count) {
+ 					stop_page = true
+ 					return
+		        }
+		        last_count = count
+		    	updateData()   	
+		    }
+		});
+
+		$.ajaxSetup({ data: {csrfmiddlewaretoken: '{{ csrf_token }}' },}); //Устанавливаю CSRF
+	</script>
+
+{% endblock %}

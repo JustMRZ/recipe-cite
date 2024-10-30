@@ -1,0 +1,64 @@
+services:
+    web-app:
+        build:
+            context: .
+        ports:
+            - "8000:8000"
+        volumes:
+            - ./recipe_proj:/recipe_proj
+        environment:
+            - DB_HOST=database
+            - DB_NAME=recipedb
+            - DB_USER=dbuser
+            - DB_PASS=qwerty
+        command: >
+            sh -c "python3 manage.py runserver 0.0.0.0:8000"
+
+        depends_on:
+            - database
+    database:
+        image: postgres:14.6-alpine
+        environment:
+            - POSTGRES_DB=recipedb
+            - POSTGRES_USER=dbuser
+            - POSTGRES_PASSWORD=qwerty
+        ports:
+            - "5433:5432"
+    
+    redis:
+        image: redis:7.0.5-alpine
+        hostname: redis
+
+    woker:
+        build:
+            context: .
+        hostname: worker
+        entrypoint: celery
+        command: -A celery_app.app worker --loglevel=INFO -P eventlet
+        volumes:
+            - ./recipe_proj:/recipe_proj
+        links:
+            - redis
+        depends_on:
+            - redis
+            - database
+        environment:
+            - DB_HOST=database
+            - DB_NAME=recipedb
+            - DB_USER=dbuser
+            - DB_PASS=qwerty
+
+    flower:
+        build:
+            context: .
+        hostname: flower
+        entrypoint: celery
+        command: -A celery_app.app flower
+        volumes:
+            - ./recipe_proj:/recipe_proj
+        links:
+            - redis
+        depends_on:
+            - redis
+        ports:
+            - '5555:5555'
